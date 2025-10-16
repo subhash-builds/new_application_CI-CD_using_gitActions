@@ -28,5 +28,9 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Build and deploy to cloud 
-      run: mvn clean deploy -DmuleDeploy --file pom.xml --settings .maven/settings.xml
+        
+    - name: Build with Maven
+      run: mvn clean install --file pom.xml --settings .maven/settings.xml
+
+    - name: Deploy to CloudHub
+      run: mvn deploy -DmuleDeploy --file pom.xml --settings .maven/settings.xml
