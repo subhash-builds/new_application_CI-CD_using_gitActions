@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="40da6641-72e7-4ab8-a636-a9599a47a739" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="king-flow" doc:id="d07b6731-17f1-48c1-9c8e-efb3125cbe91" >
+		<http:listener doc:name="listener" doc:id="6dd2f2e7-de41-416d-8e33-8f5d818df5ae" config-ref="HTTP_Listener_config" path="/git" />
+		<logger level="INFO" doc:name="logging-start" doc:id="19e1b483-e75c-4daf-993b-caff94d8bc13" message='#["Start of the flow"++ (flow.name as String)]' />
+		<ee:transform doc:name="transform-message" doc:id="f40ae6f2-95b0-41cd-8191-07ef7cce61f5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: "Hi "++ (attributes.queryString.name  default  "Jaan")++ " nice to meet you"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="logging-end" doc:id="ac6aaf86-ad02-47ba-90ad-1f96eb950de1" message='#["End of the flow"++ (flow.name as String)]' />
+	</flow>
+</mule>
